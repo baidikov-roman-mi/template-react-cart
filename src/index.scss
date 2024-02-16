@@ -1,3 +1,7 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 $colors: (rgba(255, 255, 255), #242424, #646cff, #535bf2, #1a1a1a, #747bff, #f9f9f9);
 
 :root {
