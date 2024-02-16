@@ -1,0 +1,70 @@
+$colors: (rgba(255, 255, 255), #242424, #646cff, #535bf2, #1a1a1a, #747bff, #f9f9f9);
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: nth($colors, 1);
+  background-color: nth($colors, 2);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: nth($colors, 3);
+  text-decoration: inherit;
+}
+a:hover {
+  color: nth($colors, 4);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: nth($colors, 5);
+  cursor: pointer;
+  transition: border-color 0.25s;
+  &:hover {
+    border-color: nth($colors, 3);
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: nth($colors, 2);
+    background-color: nth($colors, 1);
+  }
+  a:hover {
+    color: nth($colors, 6);
+  }
+  button {
+    background-color: nth($colors, 7);
+  }
+}
