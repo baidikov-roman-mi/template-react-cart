@@ -1,20 +1,30 @@
 import { Fragment, useState, useEffect } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { products } from "../assets/products"
+import { productList } from "../assets/productList"
 
 interface Props {
   clickedCartIcon: boolean
 }
 
 export default function Cart({ clickedCartIcon }: Props) {
+  const [products, setProducts] = useState(productList)
+
   const [open, setOpen] = useState(clickedCartIcon)
 
   useEffect(() => {
     setOpen(clickedCartIcon)
   }, [clickedCartIcon])
 
-  let subtotal = products.reduce((total, product) => total + product.price, 0)
+  const handleQuantityChange = (id: number, newQuantity: string) => {
+    setProducts(
+      products.map((product) =>
+        product.id === id ? { ...product, quantity: Number(newQuantity) } : product
+      )
+    )
+  }
+
+  let subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0)
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -28,12 +38,12 @@ export default function Cart({ clickedCartIcon }: Props) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-4">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -43,7 +53,7 @@ export default function Cart({ clickedCartIcon }: Props) {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className="pointer-events-auto w-screen md:max-w-md lg:max-w-xl">
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
@@ -68,33 +78,50 @@ export default function Cart({ clickedCartIcon }: Props) {
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
                             {products.map((product) => (
                               <li key={product.id} className="flex py-6">
-                                <div className="h-32 w-32 p-1 max-w-full overflow-hidden rounded-md border border-gray-200 flex items-center">
+                                <div className="h-32 w-32 p-1 max-w-full overflow-hidden rounded-md border border-gray-200 flex items-center hover:border-teal-600 hover:scale-inside-125">
                                   <img
                                     src={product.imageSrc}
                                     alt={product.imageAlt}
-                                    className="object-cover object-center"
+                                    className="object-cover object-center transition-all transform"
                                   />
                                 </div>
 
                                 <div className="ml-4 flex flex-1 flex-col">
                                   <div>
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
+                                    <div className="flex justify-between text-base font-medium text-teal-600">
+                                      <h3 className="w-1/2">
                                         <a href={product.href}>{product.name}</a>
                                       </h3>
-                                      <p className="ml-4">€{product.price}</p>
+                                      <div className="w-1/3 text-right">
+                                        <p>€{product.price * product.quantity}</p>
+                                        <p className="text-sm font-light text-gray-500">
+                                          €{product.price} per one
+                                        </p>
+                                      </div>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
-                                    <select className="text-gray-500 bg-white border rounded-md">
-                                      <option value={product.quantity}>{product.quantity}</option>
+                                    <select
+                                      className="text-gray-500 bg-white border rounded-md"
+                                      onChange={(e) =>
+                                        handleQuantityChange(product.id, e.target.value)
+                                      }
+                                    >
+                                      {[...Array(product.maxQuantity).keys()].map((index) => (
+                                        <option
+                                          value={index + 1}
+                                          selected={product.quantity == index + 1 ? true : false}
+                                        >
+                                          {index + 1}
+                                        </option>
+                                      ))}
                                     </select>
 
                                     <div className="flex">
                                       <button
                                         type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                        className="font-medium text-teal-600 hover:text-teal-500"
                                       >
                                         Remove
                                       </button>
@@ -119,7 +146,7 @@ export default function Cart({ clickedCartIcon }: Props) {
                       <div className="mt-6">
                         <a
                           href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
                         >
                           Checkout
                         </a>
@@ -129,7 +156,7 @@ export default function Cart({ clickedCartIcon }: Props) {
                           or
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-teal-600 hover:text-teal-500"
                             onClick={() => setOpen(false)}
                           >
                             Continue Shopping

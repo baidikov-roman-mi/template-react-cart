@@ -19,15 +19,6 @@ $colors: (rgba(255, 255, 255), #242424, #646cff, #535bf2, #1a1a1a, #747bff, #f9f
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: nth($colors, 3);
-  text-decoration: inherit;
-}
-a:hover {
-  color: nth($colors, 4);
-}
-
 body {
   margin: 0;
   display: flex;
@@ -52,11 +43,21 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   &:hover {
-    border-color: nth($colors, 3);
+    border-color: nth($colors, 2);
   }
   &:focus,
   &:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+.hover\:scale-inside-125:hover {
+  > img {
+    --tw-scale-x: 1.25;
+    --tw-scale-y: 1.25;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate))
+      skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+      scaleY(var(--tw-scale-y));
   }
 }
 
